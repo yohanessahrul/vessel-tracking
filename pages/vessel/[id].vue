@@ -8,9 +8,6 @@
 
 <script setup>
   const { id } = useRoute().params;
-  definePageMeta({
-    layout: "vessel"
-  })
 </script>
 
 <style scoped>
