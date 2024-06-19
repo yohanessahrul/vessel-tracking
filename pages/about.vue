@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto">
-    <h2 class="mt-10 pb-5 font-bold">About Page</h2>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae accusantium sint mollitia error ipsa assumenda asperiores laboriosam cumque dolorem placeat maxime iusto incidunt veritatis velit maiores ducimus deleniti, at rem!</p>
+  <div>
+    <h2 class="mt-10 font-bold text-lg">Semua posisi Vessel</h2>
+    <p class="font-light text-xs mb-6 mt-0 pt-0">Berikut adalah data vessel yang dapat kami track</p>
   </div>
 </template>
 
