@@ -12,7 +12,7 @@
               class="w-[60px] h-[60px] flex justify-center items-center text-gray-800 bg-gray-700 hover:bg-gray-600 hover:text-green-200 rounded-lg transition-all duration-100"
               to="/"
             >
-              <img src="../public/dashboard.png"/>
+              <img class="w-[35px] h-[35px]" src="../public/dashboard.png"/>
             </NuxtLink>
           </li>
           <li>
@@ -20,15 +20,15 @@
               class="w-[60px] h-[60px] flex justify-center items-center text-gray-800 bg-gray-700 hover:bg-gray-600 hover:text-green-200 rounded-lg transition-all duration-100"
               to="/plane"
             >
-            <img src="../public/plane.png"/>
+            <img class="w-[35px] h-[35px]" src="../public/plane.png"/>
             </NuxtLink>
           </li>
           <li>
             <NuxtLink
               class="w-[60px] h-[60px] flex justify-center items-center text-gray-800 bg-gray-700 hover:bg-gray-600 hover:text-green-200 rounded-lg transition-all duration-100"
-              to="/vessel/789"
+              to="/vessel"
             >
-            <img src="../public/shield.png"/>
+            <img class="w-[35px] h-[35px]" src="../public/shield.png"/>
             </NuxtLink>
           </li>
         </ul>
@@ -38,16 +38,16 @@
         <ul class="flex flex-col gap-4 items-center">
           <li>
             <NuxtLink
-              class="w-[60px] h-[60px] flex justify-center items-center text-gray-100 bg-orange-800 hover:bg-green-800 hover:text-green-200 rounded-full transition-all duration-100"
+              class="w-[60px] h-[60px] flex justify-center items-center text-gray-100 hover:text-gray-800 bg-yellow-600 hover:bg-yellow-500 hover:text-green-200 rounded-full transition-all duration-100"
               to="/profile"
             >
-              Pro
+            <img class="w-[35px] h-[35px]" src="../public/avatar.png"/>
             </NuxtLink>
           </li>
         </ul>
       </div>
     </header>
-  <div class="w-screen p-6 bg-sky-100 ml-[120px]">
+  <div class="w-screen min-h-screen p-6 bg-sky-100 ml-[120px]">
     <slot />
   </div>
   </div>
