@@ -141,8 +141,9 @@
     },
     
     beforeDestroy() {
-      if (map) {
-        map.remove();
+      console.log('beforeDestroy')
+      if (this.map) {
+        this.map.remove();
       }
     }
   }

@@ -103,12 +103,9 @@
 
     let isAtStart = true;
 
-
-
       map.scrollZoom.disable();
 
       this.cordinates.forEach(function(marker, i) {
-        // console.log(`marker ${i}`, marker);
 
         const el = document.createElement('div');
         el.className = 'marker';
@@ -116,10 +113,6 @@
         el.style.width = `20px`;
         el.style.height = `20px`;
         el.style.backgroundSize = '100%';
-
-        // el.addEventListener('click', () => {
-        //   window.location.href=`/vessel/${marker.id}`
-        // })
 
         const popup = `
           <div class="w-[250px] bg-white p-4 rounded-md flex shadow-lg relative wanjay" data-popup='${JSON.stringify(marker)}'>

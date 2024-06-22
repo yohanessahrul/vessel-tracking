@@ -1,103 +1,129 @@
 <template>
   <div ref="mapContainer" class="h-full relative z-0">
     <div class="absolute z-10 right-[15px] top-[15px] rounded-lg">
-      <button
-        v-if="isScrollZoom"
-        class="btn bg-yellow-400 px-2 py-1 rounded-sm text-black"
-        @click="changeScrollZomm"
+      <h3
+        v-if="isPolylineLoading"
+        class="btn bg-yellow-400 text-black px-3 py-1 font-bold"
       >
-      Zoom : On
-    </button>
-    <button
-    v-else
-    class="btn bg-gray-400 px-2 py-1 rounded-sm text-black"
-    @click="changeScrollZomm"
-  >
-  Zoom : Off
-</button>
+        Loading Polylines...
+      </h3>
     </div>
   </div>
 </template>
 
 <script>
   import mapboxgl from 'mapbox-gl';
-  import plane from '../public/plane-icon.png';
-  import ship from '../public/ship-icon.png';
-  import avatarPesawat from '../public/avatar-pesawat.jpeg';
-  import avatarVessel from '../public/avatar-vessel.png';
 
   export default {
     name: 'DetailMap',
-    props: ['cordinates', 'isMarkerClickable'],
+    props: {
+      tracks: {
+        type: Array
+      }
+    },
+
     data() {
       return {
+        map: null,
         center: [117.224915, -0.572695],
-        zoomLevel: 10,
-        isScrollZoom: true
+        zoomLevel: 5,
+        isPolylineLoading: false,
       }
     },
 
     mounted() {
-      const runtimeConfig = useRuntimeConfig()
-      mapboxgl.accessToken = runtimeConfig.public.mapboxKey;
-
-      const map = new mapboxgl.Map({
-        container: this.$refs.mapContainer,
-        style: 'mapbox://styles/mapbox/navigation-night-v1',
-        center: this.center,
-        projection: "naturalEarth",
-        zoom: this.zoomLevel,
-        maxZoom: 8,
-
-      });
-
-      map.scrollZoom.disable();
-
-      this.cordinates.forEach(function(marker, i) {
-        // console.log(`marker ${i}`, marker);
-
-        const el = document.createElement('div');
-        el.className = 'marker';
-        el.style.backgroundImage = `url(${marker.type === 'plane' ? plane : ship})`;
-        el.style.width = `30px`;
-        el.style.height = `30px`;
-        el.style.backgroundSize = '100%';
-        el.addEventListener('click', () => {
-          window.location.href=`/${marker.type}/${marker.id}`
-        })
-
-        new mapboxgl.Marker(el)
-          .setLngLat(marker.coordinates)
-          .addTo(map)
-
-      });
-
-      this.map = map;
-
-
+      try {
+        this.initializeMap();
+      } catch (error) {
+        console.log('error', error)        
+      }
     },
 
     methods: {
-      changeScrollZomm: function() {
-        if(this.map) {
-          if (this.isScrollZoom) {
-            this.map.scrollZoom.disable(); // Disable scroll zoom
-          } else {
-            this.map.scrollZoom.enable(); // Enable scroll zoom
-          }
-        }
+      initializeMap: function() {
 
-        this.isScrollZoom = !this.isScrollZoom
+        const runtimeConfig = useRuntimeConfig()
+        mapboxgl.accessToken = runtimeConfig.public.mapboxKey;
+
+        this.map = new mapboxgl.Map({
+          container: this.$refs.mapContainer,
+          style: 'mapbox://styles/mapbox/navigation-night-v1',
+          center: this.center,
+          projection: "naturalEarth",
+          zoom: this.zoomLevel,
+        });
+
+        this.addPolylines();
+      },
+
+      getColor: function (speed) {
+        if (speed > 4) {
+          return 'red';
+        } else if (speed > 3) {
+          return 'orange';
+        } else if (speed > 2) {
+          return 'yellow';
+        } else if (speed > 1) {
+          return 'green';
+        } else {
+          return 'gray';
+        }
+      },
+
+      addPolylines: function() {
+        this.isPolylineLoading = true
+
+        this.map.on("load", () => {
+          this.tracks.map((track, i) => {
+            const color = this.getColor(track.speed);
+            const polyline = {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [
+                    this.tracks[i].longitude,
+                    this.tracks[i].latitude
+                  ],
+                  [
+                    this.tracks.length == i+1 ? this.tracks[i].longitude : this.tracks[i+1].longitude,
+                    this.tracks.length == i+1 ? this.tracks[i].latitude : this.tracks[i+1].latitude
+                  ]
+                ]
+              },
+            }
+            
+            this.map.addLayer({
+              id: 'route' + i,
+              type: 'line',
+              source: {
+                type: 'geojson',
+                data: polyline
+              },
+              layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+              },
+              paint: {
+                'line-color': color,
+                'line-width': 8
+              }
+            })
+          });
+
+          this.isPolylineLoading = false
+        });
       },
     },
-    
+
     beforeDestroy() {
       if (this.map) {
         this.map.remove();
+        mapboxgl.clearStorage();
       }
     }
   }
-
 </script>
 
 <style>
