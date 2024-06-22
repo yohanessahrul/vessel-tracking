@@ -3,10 +3,17 @@
     <div class="absolute z-10 right-[15px] top-[15px] rounded-lg">
       <h3
         v-if="isPolylineLoading"
-        class="btn bg-yellow-400 text-black px-3 py-1 font-bold"
+        class="btn bg-white text-black px-3 py-1 font-bold"
       >
         Loading Polylines...
       </h3>
+      <button
+        v-if="isPolylineRendered"
+        @click="addShapedArea"
+        class="btn bg-yellow-400 text-black px-3 py-1 font-bold"
+      >
+        Show Shape Area
+      </button>
     </div>
   </div>
 </template>
@@ -28,6 +35,7 @@
         center: [117.224915, -0.572695],
         zoomLevel: 5,
         isPolylineLoading: false,
+        isPolylineRendered: false,
       }
     },
 
@@ -53,7 +61,12 @@
           zoom: this.zoomLevel,
         });
 
-        this.addPolylines();
+        this.isPolylineLoading = true
+
+        this.map.on("load", () => {
+          this.addPolylines();
+        });
+
       },
 
       getColor: function (speed) {
@@ -71,48 +84,78 @@
       },
 
       addPolylines: function() {
-        this.isPolylineLoading = true
-
-        this.map.on("load", () => {
-          this.tracks.map((track, i) => {
-            const color = this.getColor(track.speed);
-            const polyline = {
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                coordinates: [
-                  [
-                    this.tracks[i].longitude,
-                    this.tracks[i].latitude
-                  ],
-                  [
-                    this.tracks.length == i+1 ? this.tracks[i].longitude : this.tracks[i+1].longitude,
-                    this.tracks.length == i+1 ? this.tracks[i].latitude : this.tracks[i+1].latitude
-                  ]
+        this.tracks.map((track, i) => {
+          const color = this.getColor(track.speed);
+          const polyline = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [
+                  this.tracks[i].longitude,
+                  this.tracks[i].latitude
+                ],
+                [
+                  this.tracks.length == i+1 ? this.tracks[i].longitude : this.tracks[i+1].longitude,
+                  this.tracks.length == i+1 ? this.tracks[i].latitude : this.tracks[i+1].latitude
                 ]
-              },
+              ]
+            },
+          }
+          
+          this.map.addLayer({
+            id: 'route' + i,
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: polyline
+            },
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': color,
+              'line-width': 8
             }
-            
-            this.map.addLayer({
-              id: 'route' + i,
-              type: 'line',
-              source: {
-                type: 'geojson',
-                data: polyline
-              },
-              layout: {
-                'line-join': 'round',
-                'line-cap': 'round'
-              },
-              paint: {
-                'line-color': color,
-                'line-width': 8
-              }
-            })
-          });
+          })
+        });
 
-          this.isPolylineLoading = false
+        this.isPolylineLoading = false
+        this.isPolylineRendered = true
+      },
+
+      addShapedArea: function() {
+        this.map.addSource('shaped-area-nih', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                geometry: {
+                  type: 'Polygon',
+                  coordinates: [
+                    this.tracks.map((track) => {
+                      return [track.longitude, track.latitude]
+                    })
+                  ]
+                }
+              },
+            ]
+          }
+        });
+
+        this.map.addLayer({
+          id: 'park-boundary',
+          type: 'fill',
+          source: 'shaped-area-nih',
+          layout: {},
+          paint: {
+            'fill-color': 'pink',
+            'fill-opacity': 0.4
+          }
         });
       },
     },
