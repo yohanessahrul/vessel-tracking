@@ -28,7 +28,7 @@
 
   export default {
     name: 'IndonesiaMap',
-    props: ['cordinates', 'isMarkerClickable'],
+    props: ['cordinates'],
     data() {
       return {
         center: [117.224915, -0.572695],

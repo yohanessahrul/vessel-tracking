@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-row">
+  <div class="flex flex-row relative">
+    
     <header class="shadow-sm bg-gray-950 w-[120px] h-screen flex flex-col fixed">
       <nav class="container mx-auto p-4 flex flex-col justify-center">
         <!-- <h2 class="font-bold text-center mt-10 mb-10 text-white">VesselHub</h2> -->
