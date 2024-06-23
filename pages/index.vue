@@ -96,7 +96,7 @@ export default {
         { id: "013", coordinates: [119.5493144, -5.07750919543936], name: 'Pesawat 6', type: 'plane' },
       ],
       isBackdropActive: false,
-      childrenModal: 'edit-asset',
+      childrenModal: '',
       action: '', // create, edit
       currentData: {},
       isSuccess: false,
@@ -175,7 +175,7 @@ export default {
       setTimeout(() => {
         this.childrenModal =''
         this.closeBackdrop()
-      }, 3000);
+      }, 5000);
     },
   },
 };
