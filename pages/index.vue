@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BackdropScreen
+    <!-- <BackdropScreen
       v-if="isBackdropActive"
       :action="action"
       :childrenModal="childrenModal"
@@ -64,8 +64,8 @@
           </tbody>
         </table>
       </div>
-    </div>
-    <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil natus, ullam provident soluta omnis velit optio quasi commodi tenetur totam dicta necessitatibus explicabo corrupti! Sequi, inventore? Perferendis totam facilis unde!</p> -->
+    </div> -->
+    <h1>404 :(</h1>
   </div>
 </template>
 
@@ -128,7 +128,7 @@ export default {
         type: currentData.type
       }
       this.currentData = payload
-      this.action = 'edit'
+      this.action = action
     },
 
     clickedDataToDelete: function(action, id, currentData) {
