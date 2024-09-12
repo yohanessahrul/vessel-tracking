@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <BackdropScreen
+    <BackdropScreen
       v-if="isBackdropActive"
       :action="action"
       :childrenModal="childrenModal"
@@ -64,8 +64,7 @@
           </tbody>
         </table>
       </div>
-    </div> -->
-    <h1>404 :(</h1>
+    </div>
   </div>
 </template>
 
